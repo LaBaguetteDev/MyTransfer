@@ -1,5 +1,7 @@
 package live.labaguettedev.mytransfer.presenters;
 
+
+import live.labaguettedev.mytransfer.model.Destination;
 import live.labaguettedev.mytransfer.model.SelectedFile;
 
 public class FilePresenter {
@@ -21,6 +23,10 @@ public class FilePresenter {
         this.file = new SelectedFile(path, name, size);
 
         selectedFileScreen.showSelectedFile(path, name, size);
+    }
+
+    public void sendFile(Destination d) {
+        System.out.println(d.getIp());
     }
 
 }

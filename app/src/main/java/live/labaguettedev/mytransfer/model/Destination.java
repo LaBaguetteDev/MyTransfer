@@ -1,6 +1,8 @@
 package live.labaguettedev.mytransfer.model;
 
-public class Destination {
+import java.io.Serializable;
+
+public class Destination implements Serializable {
 
     private final String ip;
     private final String name;

@@ -11,6 +11,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/name_of"
             android:text="Nom de l'appareil"
             android:textSize="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -22,7 +23,10 @@
             android:id="@+id/destination_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/defaultpic" />
+            android:src="@drawable/defaultpic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

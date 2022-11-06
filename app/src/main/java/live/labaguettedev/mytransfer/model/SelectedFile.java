@@ -1,5 +1,6 @@
 package live.labaguettedev.mytransfer.model;
 
+
 public class SelectedFile {
 
     private String path;

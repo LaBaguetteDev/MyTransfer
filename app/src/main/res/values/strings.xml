@@ -2,7 +2,7 @@
     <string name="app_name">MyTransfer</string>
 
     <string name="select_file">Sélectionner un fichier à envoyer</string>
-    <string name="send_file">Envoyer le fichier</string>
+    <string name="send_file">Chercher un destinataire</string>
 
     <string name="waiting_destination">Recherche de destinataire en cours…</string>
     <string name="title_activity_destination">DestinationActivity</string>
@@ -14,4 +14,5 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="confirm">Confirmer</string>
 </resources>

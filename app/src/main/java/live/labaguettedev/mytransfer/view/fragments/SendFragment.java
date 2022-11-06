@@ -1,6 +1,5 @@
 package live.labaguettedev.mytransfer.view.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,19 +16,13 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.fragment.NavHostFragment;
-
-import java.util.Objects;
 
 import live.labaguettedev.mytransfer.R;
+import live.labaguettedev.mytransfer.model.Destination;
 import live.labaguettedev.mytransfer.presenters.FilePresenter;
 import live.labaguettedev.mytransfer.view.activities.DestinationActivity;
-import live.labaguettedev.mytransfer.view.activities.MainActivity;
 
 public class SendFragment extends Fragment implements FilePresenter.ISelectedFileScreen {
 
@@ -39,6 +32,8 @@ public class SendFragment extends Fragment implements FilePresenter.ISelectedFil
     TextView fileText;
 
     private FilePresenter filePresenter;
+
+    ActivityResultLauncher<Intent> getDestination;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +48,8 @@ public class SendFragment extends Fragment implements FilePresenter.ISelectedFil
         sendFile.setOnClickListener(view -> sendingFile());
 
         filePresenter = new FilePresenter(this);
+
+        getDestination = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::getDestination);
 
         return view;
     }
@@ -110,7 +107,11 @@ public class SendFragment extends Fragment implements FilePresenter.ISelectedFil
     public void sendingFile() {
         Activity currentActivity = getActivity();
         Intent intent = new Intent(currentActivity, DestinationActivity.class);
-        currentActivity.startActivity(intent);
+        getDestination.launch(intent);
+    }
+
+    private void getDestination(ActivityResult result) {
+        Destination d = (Destination) result.getData().getSerializableExtra("DESTINATION");
     }
 
 }
