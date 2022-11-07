@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 
 import live.labaguettedev.mytransfer.R;
 import live.labaguettedev.mytransfer.model.Destination;
@@ -37,6 +38,8 @@ public class DestinationActivity extends AppCompatActivity implements Destinatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destination);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         pb = findViewById(R.id.progressBar);
         textView = findViewById(R.id.text_search);

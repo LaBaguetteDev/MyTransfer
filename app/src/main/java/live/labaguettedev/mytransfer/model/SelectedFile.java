@@ -1,7 +1,9 @@
 package live.labaguettedev.mytransfer.model;
 
 
-public class SelectedFile {
+import java.io.Serializable;
+
+public class SelectedFile implements Serializable {
 
     private String path;
     private String name;

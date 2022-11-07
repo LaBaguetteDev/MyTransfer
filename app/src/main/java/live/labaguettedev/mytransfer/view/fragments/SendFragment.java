@@ -19,57 +19,67 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import java.io.File;
+import java.io.IOException;
+
 import live.labaguettedev.mytransfer.R;
 import live.labaguettedev.mytransfer.model.Destination;
 import live.labaguettedev.mytransfer.presenters.FilePresenter;
+import live.labaguettedev.mytransfer.utils.FileUtils;
 import live.labaguettedev.mytransfer.view.activities.DestinationActivity;
+import live.labaguettedev.mytransfer.view.activities.SendActivity;
 
 public class SendFragment extends Fragment implements FilePresenter.ISelectedFileScreen {
 
     View view;
-    Button selectFile;
-    Button sendFile;
+    Button selectFileBtn;
+    Button searchDestinationBtn;
+    Button sendFileBtn;
     TextView fileText;
 
     private FilePresenter filePresenter;
+    private Destination d;
 
+    ActivityResultLauncher<Intent> selectFile;
     ActivityResultLauncher<Intent> getDestination;
+    ActivityResultLauncher<Intent> sendFileActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_send, container, false);
 
 
-        selectFile = view.findViewById(R.id.select_file);
-        sendFile = view.findViewById(R.id.send_file);
+        selectFileBtn = view.findViewById(R.id.select_file);
+        searchDestinationBtn = view.findViewById(R.id.search_destination);
+        sendFileBtn = view.findViewById(R.id.send_file);
         fileText = view.findViewById(R.id.file_text);
 
-        selectFile.setOnClickListener(view -> openFileDialog());
-        sendFile.setOnClickListener(view -> sendingFile());
+        selectFileBtn.setOnClickListener(view -> openFileDialog());
+        searchDestinationBtn.setOnClickListener(view -> searchDestinator());
+        sendFileBtn.setOnClickListener(view -> sendFile());
 
         filePresenter = new FilePresenter(this);
 
+        selectFile = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent data = result.getData();
+                            Uri uri = data.getData();
+                            fileObject(view.getContext(), uri);
+                            searchDestinationBtn.setEnabled(true);
+                        }
+                    }
+                }
+        );
+
         getDestination = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::getDestination);
+        sendFileActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::getSendFileResult);
 
         return view;
     }
-
-    // SELECTION DE FICHIER
-    // Sélectionner un fichier à envoyer
-    ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        Uri uri = data.getData();
-                        fileObject(view.getContext(), uri);
-                        sendFile.setEnabled(true);
-                    }
-                }
-            }
-    );
 
     private void fileObject(Context context, Uri contentUri) {
         String res = null;
@@ -79,9 +89,11 @@ public class SendFragment extends Fragment implements FilePresenter.ISelectedFil
                 if (cursor != null && cursor.moveToFirst()) {
                     String name = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
                     double size = cursor.getDouble(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE));
-                    String path = contentUri.getPath();
-                    filePresenter.setSelectedFile(path, name, size);
+                    File f = FileUtils.getFile(requireContext(), contentUri);
+                    filePresenter.setSelectedFile(f.getPath(), name, size);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 assert cursor != null;
                 cursor.close();
@@ -94,7 +106,7 @@ public class SendFragment extends Fragment implements FilePresenter.ISelectedFil
         Intent data = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         data.setType("*/*");
         data = Intent.createChooser(data, "Choisir un fichier");
-        sActivityResultLauncher.launch(data);
+        selectFile.launch(data);
 
     }
 
@@ -104,14 +116,29 @@ public class SendFragment extends Fragment implements FilePresenter.ISelectedFil
     }
 
     // ENVOI DE FICHIER
-    public void sendingFile() {
+    public void searchDestinator() {
         Activity currentActivity = getActivity();
         Intent intent = new Intent(currentActivity, DestinationActivity.class);
         getDestination.launch(intent);
     }
 
     private void getDestination(ActivityResult result) {
-        Destination d = (Destination) result.getData().getSerializableExtra("DESTINATION");
+        d = (Destination) result.getData().getSerializableExtra("DESTINATION");
+        sendFileBtn.setVisibility(View.VISIBLE);
+        sendFileBtn.setEnabled(true);
+        searchDestinationBtn.setVisibility(View.GONE);
+        searchDestinationBtn.setEnabled(false);
     }
 
+    private void sendFile() {
+        Activity currentActivity = getActivity();
+        Intent intent = new Intent(currentActivity, SendActivity.class);
+        intent.putExtra("FILE", filePresenter.getSelectedFile());
+        intent.putExtra("DESTINATION", d);
+        sendFileActivity.launch(intent);
+    }
+
+    private void getSendFileResult(ActivityResult result) {
+
+    }
 }
