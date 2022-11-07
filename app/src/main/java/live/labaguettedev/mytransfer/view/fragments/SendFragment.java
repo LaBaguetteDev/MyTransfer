@@ -139,6 +139,11 @@ public class SendFragment extends Fragment implements FilePresenter.ISelectedFil
     }
 
     private void getSendFileResult(ActivityResult result) {
-
+        filePresenter.removeFile();
+        fileText.setText("");
+        sendFileBtn.setVisibility(View.GONE);
+        sendFileBtn.setEnabled(false);
+        searchDestinationBtn.setVisibility(View.VISIBLE);
+        searchDestinationBtn.setEnabled(false);
     }
 }

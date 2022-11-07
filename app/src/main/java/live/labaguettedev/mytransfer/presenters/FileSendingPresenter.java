@@ -22,6 +22,7 @@ public class FileSendingPresenter {
 
     public interface ISendingScreen {
         void refreshView(double percentage, double speed);
+        void finishTransfer();
     }
 
     ISendingScreen sendingScreen;
@@ -54,6 +55,7 @@ public class FileSendingPresenter {
                 FileSender fs = new FileSender(f.getPath());
                 fs.sendFile(connection.getOutputStream(), handler, sendingScreen);
 
+                f.delete();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -61,6 +63,7 @@ public class FileSendingPresenter {
 
             handler.post(() -> {
                 sendingScreen.refreshView(100, 0);
+                sendingScreen.finishTransfer();
             });
         });
 

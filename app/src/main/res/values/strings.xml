@@ -17,4 +17,9 @@
     <string name="confirm">Confirmer</string>
 
     <string name="sending_file">Envoi du fichier en cours…</string>
+    <string name="label_sending">Transfert</string>
+
+    <string name="NA">N/A</string>
+
+    <string name="finish">Terminer</string>
 </resources>

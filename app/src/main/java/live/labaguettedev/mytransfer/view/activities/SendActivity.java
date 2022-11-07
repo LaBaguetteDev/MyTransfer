@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,6 +25,8 @@ public class SendActivity extends AppCompatActivity implements FileSendingPresen
     TextView textSpeed;
     ProgressBar progressBar;
 
+    Button finishBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,9 @@ public class SendActivity extends AppCompatActivity implements FileSendingPresen
         textPercentage = findViewById(R.id.text_percentage);
         textSpeed = findViewById(R.id.text_speed);
         progressBar = findViewById(R.id.send_progress);
+        finishBtn = findViewById(R.id.finish_btn);
+
+        finishBtn.setOnClickListener(view -> finishActivity());
     }
 
     @Override
@@ -49,8 +55,19 @@ public class SendActivity extends AppCompatActivity implements FileSendingPresen
     public void refreshView(double percentage, double speed) {
         String sPercentage = new DecimalFormat("#").format(percentage);
         String sSpeed = new DecimalFormat("#.#").format(speed);
-        textPercentage.setText(sPercentage + "%");
+        textPercentage.setText(sPercentage + " %");
         textSpeed.setText(sSpeed + " MB/s");
         progressBar.setProgress(Integer.parseInt(sPercentage));
+    }
+
+    @Override
+    public void finishTransfer() {
+        finishBtn.setEnabled(true);
+    }
+
+    public void finishActivity() {
+        Intent data = new Intent();
+        setResult(RESULT_OK, data);
+        finish();
     }
 }

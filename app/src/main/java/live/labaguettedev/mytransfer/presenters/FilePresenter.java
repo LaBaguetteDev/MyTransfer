@@ -31,4 +31,7 @@ public class FilePresenter {
         return file;
     }
 
+    public void removeFile() {
+        this.file = null;
+    }
 }
