@@ -66,7 +66,5 @@ public class FileSendingPresenter {
                 sendingScreen.finishTransfer();
             });
         });
-
-
     }
 }

@@ -22,4 +22,10 @@
     <string name="NA">N/A</string>
 
     <string name="finish">Terminer</string>
+
+
+
+    <string name="send_signal_btn">Envoyer signal de réception</string>
+    <string name="waiting_for_file">En attente de la réception du fichier…</string>
+    <string name="cancel">Annuler</string>
 </resources>
